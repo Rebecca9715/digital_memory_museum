@@ -10,9 +10,6 @@ import json
 import requests
 from datetime import datetime
 
-# 添加 agent 目录到路径
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'agent'))
-
 from dotenv import load_dotenv
 from web3 import Web3
 from openai import OpenAI

@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "web/app.py",
+      "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "50mb"
@@ -11,13 +11,17 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/web/static/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "web/app.py"
+      "dest": "/api/index.py"
     }
   ],
   "functions": {
-    "web/app.py": {
-      "memory": 1024,
+    "api/index.py": {
+      "memory": 3008,
       "maxDuration": 60
     }
   }

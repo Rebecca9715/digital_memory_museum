@@ -4,6 +4,7 @@ Digital Archivist Agent - Web 界面
 """
 
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 import os
 import sys
 import json
@@ -18,19 +19,24 @@ from openai import OpenAI
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 app = Flask(__name__)
+CORS(app)  # 启用跨域支持
 
 # ============== 配置 ==============
 
 # Alchemy API 配置
-ALCHEMY_API_KEY = os.getenv("ALCHEMY_API_KEY", "9tBXs__lxsUnksFJ2YEQ5")
-SEPOLIA_RPC = f"https://eth-sepolia.g.alchemy.com/v2/{ALCHEMY_API_KEY}"
+ALCHEMY_API_KEY = os.getenv("ALCHEMY_API_KEY", "")
+if not ALCHEMY_API_KEY:
+    print("⚠️  警告: ALCHEMY_API_KEY 环境变量未设置")
+SEPOLIA_RPC = f"https://eth-sepolia.g.alchemy.com/v2/{ALCHEMY_API_KEY}" if ALCHEMY_API_KEY else "https://eth-sepolia.g.alchemy.com/v2/"
 
 # 区块链配置
-AGENT_PRIVATE_KEY = os.getenv("PRIVATE_KEY")
+AGENT_PRIVATE_KEY = os.getenv("PRIVATE_KEY", "")
 CONTRACT_ADDRESS = os.getenv("CONTRACT_ADDRESS", "0x0000000000000000000000000000000000000000")
 
 # AI 配置
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "sk-guzlijsmobmunfkkeakmfkoovjgombjhryrkplnrhhcfwjoc")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+if not OPENAI_API_KEY:
+    print("⚠️  警告: OPENAI_API_KEY 环境变量未设置")
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://api.siliconflow.cn/v1")
 AI_MODEL = os.getenv("AI_MODEL", "Qwen/Qwen3-Next-80B-A3B-Instruct")
 SCORE_THRESHOLD = int(os.getenv("SCORE_THRESHOLD", "85"))
@@ -49,7 +55,14 @@ CONTRACT_ABI = [
 ]
 
 # 初始化 Web3 - 连接到 Ethereum Sepolia 测试网
-web3 = Web3(Web3.HTTPProvider(SEPOLIA_RPC))
+# 使用 try-catch 防止初始化失败导致应用崩溃
+try:
+    web3 = Web3(Web3.HTTPProvider(SEPOLIA_RPC))
+    print(f"✅ Web3 初始化成功，连接到: {SEPOLIA_RPC[:50]}...")
+except Exception as e:
+    print(f"⚠️  Web3 初始化警告: {e}")
+    # 创建一个不连接的 Web3 实例作为降级方案
+    web3 = Web3()
 
 # ============== 路由 ==============
 

@@ -1,5 +1,5 @@
 """
-Digital Archivist Agent - Web 界面
+Digital Memory Museum (DMM) | 数字记忆博物馆 - Web 界面
 基于 Flask 的简单 Web 应用
 """
 
@@ -401,7 +401,7 @@ def examples():
 if __name__ == '__main__':
     port = 5001  # 使用 5001 端口避免冲突
     print("\n" + "=" * 60)
-    print("🌐 Digital Archivist Agent - Web 界面")
+    print("🏛️  Digital Memory Museum (DMM) | 数字记忆博物馆")
     print("=" * 60)
     print(f"\n✅ 应用启动成功！")
     print(f"\n📱 访问地址: http://localhost:{port}")

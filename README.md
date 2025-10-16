@@ -1,247 +1,291 @@
-# 🤖 Digital Archivist Agent (DAA)
+# 🏛️ Digital Memory Museum (DMM) | 数字记忆博物馆
 
-一个自主的 AI Agent，能够评估人文故事的价值，并自动在 Base Sepolia 测试网上铸造 ERC-721 "MemoryToken" NFT。
+一个结合 AI 评估和区块链技术的创新项目，让珍贵的人文故事和记忆永久保存在链上。
 
-## 📋 项目概述
+**在线体验：** [https://digital-memory-museum.vercel.app](https://digital-memory-museum.vercel.app)
 
-Digital Archivist Agent (DAA) 是一个 Web3 + AI 的创新项目，它结合了：
-- **AI 评估**：使用 GPT-4 评估故事的文学和文化价值
-- **自主决策**：基于评分自动决定是否归档
-- **链上铸造**：在 Base Sepolia 测试网上铸造 NFT 以永久保存有价值的故事
+---
 
-## 🏗️ 项目结构
+## 📋 项目简介
+
+**Digital Memory Museum (DMM) | 数字记忆博物馆** 是一个 Web3 + AI 的创新应用，旨在：
+
+- 🤖 **AI 智能评估**：使用先进的 AI 模型（Qwen）评估人文故事的价值
+- 🎨 **AI 图像生成**：为每个珍贵记忆生成独特的视觉化图像
+- ⛓️ **链上永久保存**：将高价值的记忆铸造为 NFT，永久保存在区块链上
+- 💎 **用户自主铸造**：用户可以通过 MetaMask 钱包自主铸造属于自己的记忆 NFT
+
+## ✨ 核心功能
+
+### 1. 📝 故事提交与评估
+- 用户提交个人记忆、人文故事
+- AI 从多个维度评估故事价值（情感深度、文化价值、叙事质量等）
+- 实时显示评分和详细评语
+
+### 2. 🎨 AI 图像生成
+- 根据故事内容自动生成独特的视觉化图像
+- 使用 SiliconFlow 图像生成 API
+- 每个记忆都有专属的艺术呈现
+
+### 3. ⛓️ NFT 铸造
+- **钱包连接**：支持 MetaMask 连接
+- **用户自主铸造**：评分达标后，用户可自行铸造 NFT
+- **完整元数据**：包含故事标题、描述、AI 生成图像、评分等
+- **Base Sepolia 测试网**：安全、低成本的测试环境
+
+### 4. 💻 现代化 Web 界面
+- 响应式设计，支持移动端和桌面端
+- 美观的渐变色 UI
+- 实时状态更新和交互反馈
+- 内置示例故事库
+
+## 🏗️ 技术架构
 
 ```
-DAA_MVP/
-├── contracts/              # Solidity 智能合约
-│   └── MemoryToken.sol    # ERC-721 NFT 合约
-├── agent/                 # Python Agent 脚本
-│   ├── archivist_agent.py # 核心 Agent 逻辑
-│   └── requirements.txt   # Python 依赖
-├── .env.example           # 环境变量示例
-└── README.md             # 项目文档
+Digital-Memory-Museum/
+├── web/                    # Flask Web 应用
+│   ├── app.py             # 主应用逻辑
+│   ├── static/            # 静态资源
+│   │   ├── css/          # 样式文件
+│   │   └── js/           # JavaScript 文件
+│   └── templates/         # HTML 模板
+├── contracts/             # Solidity 智能合约
+│   ├── MemoryToken.sol   # ERC-721 NFT 合约
+│   └── MemoryToken_ABI.json
+├── api/                   # Vercel Serverless Functions
+│   └── index.py          # Vercel 入口点
+├── vercel.json           # Vercel 部署配置
+└── requirements.txt      # Python 依赖
 ```
 
 ## 🚀 快速开始
 
-### 🌐 方法 A: Web 界面（推荐）
+### 在线体验（推荐）
 
-**3 步启动 Web 界面：**
+直接访问：[https://digital-memory-museum.vercel.app](https://digital-memory-museum.vercel.app)
+
+1. 输入你的故事或选择示例
+2. 点击"开始评估"
+3. 查看 AI 评分和生成的图像
+4. 如果评分达标（≥85分），点击"连接钱包"
+5. 确认交易，铸造你的记忆 NFT
+
+### 本地运行
+
+#### 1. 克隆项目
 
 ```bash
-# 1. 配置环境变量
+git clone https://github.com/Rebecca9715/digital_memory_museum.git
+cd digital_memory_museum
+```
+
+#### 2. 配置环境变量
+
+```bash
 cp env.example .env
-# 编辑 .env 文件，填写 PRIVATE_KEY, OPENAI_API_KEY, CONTRACT_ADDRESS
+```
 
-# 2. 安装依赖
+编辑 `.env` 文件，填写以下内容：
+
+```env
+# AI 配置（使用 SiliconFlow API）
+OPENAI_API_KEY=your_siliconflow_api_key
+OPENAI_API_BASE=https://api.siliconflow.cn/v1
+AI_MODEL=Qwen/Qwen3-Next-80B-A3B-Instruct
+
+# 区块链配置
+ALCHEMY_API_KEY=your_alchemy_api_key
+CONTRACT_ADDRESS=your_deployed_contract_address
+
+# 评分阈值（可选，默认 85）
+SCORE_THRESHOLD=85
+```
+
+#### 3. 安装依赖
+
+```bash
+# 创建虚拟环境（推荐）
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 安装依赖
+pip install -r requirements.txt
+```
+
+#### 4. 启动服务器
+
+```bash
 cd web
-pip install -r requirements.txt
-
-# 3. 启动服务器
 python app.py
-# 访问 http://localhost:5000
 ```
 
-### 💻 方法 B: 命令行
+访问 `http://localhost:5001`
 
-#### 安装 Python 依赖
+## 🔧 部署智能合约
 
-```bash
-cd DAA_MVP/agent
-pip install -r requirements.txt
-```
+### 使用 Remix IDE（推荐）
 
-#### 配置环境变量
+详细步骤请参考：[部署合约步骤.md](./部署合约步骤.md)
 
-```bash
-# 复制环境变量模板
-cp .env.example .env
-
-# 编辑 .env 文件，填写：
-# - PRIVATE_KEY: 你的钱包私钥
-# - OPENAI_API_KEY: OpenAI API 密钥
-# - CONTRACT_ADDRESS: 部署后的合约地址
-```
-
-### 2. 部署智能合约
-
-#### 使用 Remix IDE（推荐新手）
-
+简要步骤：
 1. 访问 [Remix IDE](https://remix.ethereum.org/)
-2. 创建新文件 `MemoryToken.sol`，复制 `contracts/MemoryToken.sol` 的内容
-3. 安装 OpenZeppelin 插件或导入：
-   ```solidity
-   // 使用 Remix 的 GitHub 导入功能
-   ```
-4. 编译合约（Solidity 版本：^0.8.20）
-5. 切换到 "Deploy & Run Transactions"
-6. 选择 "Injected Provider - MetaMask"
-7. 确保 MetaMask 连接到 **Base Sepolia 测试网**
-8. 部署合约
-9. 复制合约地址到 `.env` 文件的 `CONTRACT_ADDRESS`
+2. 复制 `contracts/MemoryToken.sol` 到 Remix
+3. 编译合约（Solidity ^0.8.20）
+4. 连接 MetaMask 到 Base Sepolia 测试网
+5. 部署合约
+6. 复制合约地址到 `.env` 的 `CONTRACT_ADDRESS`
 
-#### 使用 Hardhat/Foundry（推荐开发者）
+### 获取测试币
 
-```bash
-# 如需使用 Hardhat 或 Foundry，请自行配置部署脚本
-```
+- **Base Sepolia 测试币**：[Base Sepolia Faucet](https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet)
 
-### 3. 获取测试网代币
+## 🎯 AI 评估标准（满分 100）
 
-访问 [Base Sepolia Faucet](https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet) 获取测试 ETH。
+| 维度 | 分数 | 说明 |
+|-----|------|-----|
+| **情感深度和真实性** | 30分 | 故事的情感共鸣和真实感 |
+| **文化和历史价值** | 25分 | 对文化传承和历史记录的贡献 |
+| **叙事质量和结构** | 20分 | 故事的完整性和表达能力 |
+| **原创性和独特性** | 15分 | 故事的独特视角和创新性 |
+| **社会意义和影响力** | 10分 | 对社会的启发和影响 |
 
-### 4. 运行 Agent
+**铸造阈值**：评分 ≥ 85 分的故事可以铸造为 NFT
 
-**Web 界面（推荐）：**
-```bash
-cd web
-python app.py
-# 在浏览器中访问 http://localhost:5000
-```
+## 💻 技术栈
 
-**命令行：**
-```bash
-cd agent
-python archivist_agent.py
-```
+### 前端
+- HTML5 / CSS3 / JavaScript
+- Web3.js（MetaMask 集成）
+- 响应式设计
 
-Agent 将：
-1. 📝 使用 AI 评估内置的示例故事
-2. 🤔 根据评分自主决策是否铸造 NFT
-3. ⛓️ 如果评分 ≥ 85，自动在链上铸造 MemoryToken
+### 后端
+- Python 3.9+
+- Flask Web 框架
+- OpenAI API（SiliconFlow 兼容）
 
-### 🎨 Web 界面功能
-
-- ✨ 美观的现代化 UI
-- 📝 文本编辑器输入故事
-- 🤖 实时 AI 评估和反馈
-- 📊 可视化评分展示
-- ⛓️ 一键铸造 NFT
-- 📚 内置示例故事
-- 💰 实时钱包余额显示
-
-## 📖 使用示例
-
-### 评估自定义故事
-
-修改 `archivist_agent.py` 底部的 `sample_story` 变量：
-
-```python
-custom_story = """
-你的故事内容...
-"""
-
-run_archivist(custom_story)
-```
-
-### 调整评分阈值
-
-在 `archivist_agent.py` 中修改：
-
-```python
-SCORE_THRESHOLD = 85  # 修改为你想要的阈值（0-100）
-```
-
-## 🧠 工作原理
-
-### AI 评估标准（0-100 分）
-
-- **情感深度和真实性** (30分)
-- **文化和历史价值** (25分)
-- **叙事质量和结构** (20分)
-- **原创性和独特性** (15分)
-- **社会意义和影响力** (10分)
-
-### 决策逻辑
-
-```
-评分 ≥ 85 → 铸造 NFT ✅
-评分 < 85 → 不铸造 ❌
-```
-
-### NFT 元数据
-
-每个 MemoryToken 包含：
-- **name**: 故事标题
-- **description**: 故事评估描述
-- **score**: AI 评分
-- **type**: Memory
-
-## 🔧 技术栈
-
-### 智能合约
+### 区块链
 - Solidity ^0.8.20
 - OpenZeppelin ERC721
 - Base Sepolia Testnet
+- Alchemy RPC
 
-### Python Agent
-- `web3.py` - 以太坊交互
-- `openai` - GPT-4 API
-- `python-dotenv` - 环境变量管理
+### 部署
+- Vercel（前端 + Serverless Functions）
+- GitHub（代码托管和 CI/CD）
 
-## 📝 智能合约 API
+## 📊 智能合约 API
 
-### `mintToken(address recipient, string memory tokenURI)`
+### 核心功能
 
-铸造新的 MemoryToken NFT（仅合约所有者可调用）
+#### `mint(string memory tokenURI) public payable`
+用户自主铸造 NFT
 
-**参数：**
-- `recipient`: 接收者地址
-- `tokenURI`: Token 元数据 URI
+**参数**：
+- `tokenURI`: NFT 元数据 URI（包含图像、描述等）
 
-**返回：**
+**返回**：
 - `tokenId`: 新铸造的 Token ID
 
-### `getCurrentTokenId()`
+#### `getCurrentTokenId() public view`
+获取下一个将铸造的 Token ID
 
-获取当前 Token 计数（下一个将铸造的 Token ID）
+#### `tokensOfOwner(address owner) public view`
+查询某地址拥有的所有 Token ID
 
-## 🔐 安全注意事项
+## 🔐 安全提示
 
-⚠️ **重要提醒：**
+⚠️ **重要事项**：
 
-1. **永远不要提交 `.env` 文件到 Git**
-2. **私钥仅用于测试网，不要使用主网私钥**
-3. **定期轮换 API 密钥**
-4. **在生产环境中使用硬件钱包或 KMS**
+1. **不要泄露私钥**：永远不要在代码中硬编码私钥
+2. **使用测试网**：当前项目使用 Base Sepolia 测试网
+3. **环境变量**：所有敏感信息通过 `.env` 管理
+4. **合约权限**：合约部署后，建议转移所有权或使用多签
+5. **API 密钥**：定期轮换 API 密钥
 
-## 🛣️ 路线图
+## 🌐 Vercel 部署
 
-### MVP (当前版本)
-- [x] AI 评估故事价值
-- [x] 自主决策铸造
-- [x] Base Sepolia 链上铸造
+项目已配置自动部署到 Vercel。每次推送到 `main` 分支都会自动触发部署。
 
-### 未来功能
-- [ ] IPFS 集成，存储完整故事和元数据
-- [ ] Web UI 界面
-- [ ] 多语言支持
-- [ ] 社区投票机制
+### 手动部署
+
+```bash
+# 推送到 GitHub
+git push origin main
+
+# Vercel 会自动检测并部署
+```
+
+### 配置环境变量
+
+在 Vercel Dashboard → Settings → Environment Variables 中配置：
+- `OPENAI_API_KEY`
+- `OPENAI_API_BASE`
+- `AI_MODEL`
+- `ALCHEMY_API_KEY`
+- `CONTRACT_ADDRESS`
+- `SCORE_THRESHOLD`
+
+## 📱 使用场景
+
+- 📖 **个人回忆录**：保存珍贵的家庭故事和个人经历
+- 🌏 **文化传承**：记录传统习俗、方言、民间故事
+- 🏛️ **口述历史**：永久保存历史见证者的叙述
+- 💝 **情感寄托**：纪念重要的人、事、物
+- 🎨 **创意写作**：展示和保护原创文学作品
+
+## 🗺️ 项目路线图
+
+### ✅ 已完成（V1.0）
+- [x] AI 故事评估
+- [x] AI 图像生成
+- [x] MetaMask 钱包集成
+- [x] 用户自主 NFT 铸造
+- [x] Web 界面
+- [x] Vercel 在线部署
+- [x] Base Sepolia 测试网集成
+
+### 🔜 计划中（V2.0）
+- [ ] IPFS 存储完整故事内容
+- [ ] 多链部署（Ethereum、Polygon、Arbitrum）
+- [ ] NFT 交易市场
+- [ ] 社区投票和策展
+- [ ] 多语言支持（英语、日语等）
 - [ ] 主网部署
-- [ ] DAO 治理
 
 ## 🤝 贡献
 
-欢迎提交 Issue 和 Pull Request！
+欢迎所有形式的贡献！
 
-## 📄 许可证
+- 🐛 提交 Bug 报告
+- 💡 提出新功能建议
+- 🔧 提交 Pull Request
+- 📖 改进文档
 
-MIT License
+## 📄 开源协议
+
+MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 🔗 相关链接
 
-- [Base Sepolia 浏览器](https://sepolia.basescan.org/)
-- [Base 官方文档](https://docs.base.org/)
-- [OpenAI API 文档](https://platform.openai.com/docs)
-- [Web3.py 文档](https://web3py.readthedocs.io/)
+- **在线演示**：[https://digital-memory-museum.vercel.app](https://digital-memory-museum.vercel.app)
+- **GitHub 仓库**：[https://github.com/Rebecca9715/digital_memory_museum](https://github.com/Rebecca9715/digital_memory_museum)
+- **Base Sepolia 浏览器**：[https://sepolia.basescan.org/](https://sepolia.basescan.org/)
+- **SiliconFlow API**：[https://siliconflow.cn](https://siliconflow.cn)
+- **Alchemy**：[https://www.alchemy.com/](https://www.alchemy.com/)
 
-## 💡 灵感
+## 💬 联系方式
 
-这个项目探索了 AI 与 Web3 的结合，展示了 AI Agent 如何自主与区块链交互，
-为数字内容的价值评估和永久保存提供了新的可能性。
+有任何问题或建议？欢迎通过以下方式联系：
+
+- GitHub Issues: [提交 Issue](https://github.com/Rebecca9715/digital_memory_museum/issues)
+- Email: [你的邮箱]
 
 ---
 
-**Built with ❤️ for the future of digital archiving**
+<div align="center">
 
+**🏛️ 让每一份珍贵的记忆都值得被永久保存 🏛️**
 
+*Built with ❤️ for the future of digital memory preservation*
+
+</div>

@@ -1,4 +1,4 @@
-// Digital Archivist Agent - 前端 JavaScript
+// Digital Memory Museum (DMM) | 数字记忆博物馆 - 前端 JavaScript
 
 // 全局状态
 let currentEvaluation = null;
@@ -6,7 +6,7 @@ let exampleStories = [];
 
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🤖 Digital Archivist Agent 已加载');
+    console.log('🏛️ Digital Memory Museum 已加载');
     checkStatus();
     loadExamples();
     setupEventListeners();
@@ -563,7 +563,7 @@ window.DAA = {
     checkStatus
 };
 
-console.log('✅ Digital Archivist Agent 初始化完成');
+console.log('✅ Digital Memory Museum 初始化完成');
 
 
 

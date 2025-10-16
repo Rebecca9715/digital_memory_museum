@@ -19,12 +19,20 @@ try:
     from web.app import app
     print("✅ Flask 应用导入成功")
     
-    # Vercel 会自动调用这个 app
-    # 不需要额外的 handler 函数
+    # 确保 app 作为模块的默认导出
+    # Vercel 会寻找名为 'app' 的变量
+    handler = app
     
 except Exception as e:
     print(f"❌ Flask 应用导入失败: {e}")
     import traceback
     traceback.print_exc()
-    raise
+    
+    # 创建一个简单的错误应用
+    from flask import Flask
+    handler = Flask(__name__)
+    
+    @handler.route('/')
+    def error_handler():
+        return f"❌ 应用启动失败: {str(e)}", 500
 

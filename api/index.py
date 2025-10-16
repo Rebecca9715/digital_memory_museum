@@ -4,62 +4,96 @@ Vercel Serverless Function 入口点
 """
 import sys
 import os
+import traceback as tb
 
-# 打印启动信息（会显示在 Vercel 日志中）
-print("=" * 60)
-print("🚀 Vercel Serverless Function 启动中...")
-print(f"📂 Python 版本: {sys.version}")
-print(f"📂 Python 路径: {sys.path[:3]}")
-print(f"📂 当前工作目录: {os.getcwd()}")
-print(f"📂 环境变量 OPENAI_API_KEY: {'已设置' if os.getenv('OPENAI_API_KEY') else '未设置'}")
-print(f"📂 环境变量 ALCHEMY_API_KEY: {'已设置' if os.getenv('ALCHEMY_API_KEY') else '未设置'}")
-print(f"📂 环境变量 CONTRACT_ADDRESS: {os.getenv('CONTRACT_ADDRESS', '未设置')}")
-print("=" * 60)
-
-# 将项目根目录添加到 Python 路径
+# 将项目根目录添加到 Python 路径（必须在导入之前）
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
-print(f"✅ 项目根目录: {project_root}")
 
+# 尝试导入 Flask 应用
 try:
-    # 导入 Flask 应用
-    print("📦 正在导入 Flask 应用...")
-    from web.app import app
-    print("✅ Flask 应用导入成功")
-    print(f"✅ Flask 应用名称: {app.name}")
-    print(f"✅ Flask 路由: {[str(rule) for rule in app.url_map.iter_rules()][:5]}")
-    
-    # Vercel 会寻找名为 'app' 的变量作为默认导出
-    # 这是标准的 Vercel Python 函数格式
+    from web.app import app as flask_app
+    app = flask_app
     
 except Exception as e:
-    print("=" * 60)
-    print(f"❌ Flask 应用导入失败: {e}")
-    print(f"❌ 错误类型: {type(e).__name__}")
-    import traceback
-    print("❌ 完整堆栈跟踪:")
-    traceback.print_exc()
-    print("=" * 60)
-    
-    # 创建一个简单的错误应用
+    # 如果导入失败，创建一个错误页面应用
     from flask import Flask
     app = Flask(__name__)
     
-    @app.route('/')
-    def error_handler():
-        return f"""
-        <html>
-        <head><title>应用启动失败</title></head>
-        <body>
-            <h1>❌ 应用启动失败</h1>
-            <p><strong>错误信息：</strong> {str(e)}</p>
-            <p><strong>错误类型：</strong> {type(e).__name__}</p>
-            <p>请检查 Vercel Function Logs 获取详细信息</p>
-        </body>
-        </html>
-        """, 500
+    # 捕获错误信息（在 except 块中）
+    _error_message = str(e)
+    _error_type = type(e).__name__
+    _error_traceback = tb.format_exc()
     
-    @app.route('/<path:path>')
-    def catch_all(path):
-        return error_handler()
+    # 创建错误处理函数
+    def make_error_handler(error_msg, error_tp, error_tb):
+        def error_handler(path=''):
+            return f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>应用启动失败</title>
+                <style>
+                    body {{ 
+                        font-family: monospace; 
+                        margin: 40px; 
+                        background-color: #f5f5f5; 
+                    }}
+                    .error-box {{ 
+                        background-color: white; 
+                        border-left: 4px solid #d32f2f; 
+                        padding: 20px; 
+                        margin: 20px 0; 
+                    }}
+                    h1 {{ color: #d32f2f; }}
+                    pre {{ 
+                        background-color: #f5f5f5; 
+                        padding: 15px; 
+                        overflow-x: auto; 
+                        border: 1px solid #ddd;
+                    }}
+                </style>
+            </head>
+            <body>
+                <h1>❌ Flask 应用启动失败</h1>
+                
+                <div class="error-box">
+                    <h2>错误类型</h2>
+                    <p><strong>{error_tp}</strong></p>
+                </div>
+                
+                <div class="error-box">
+                    <h2>错误信息</h2>
+                    <p>{error_msg}</p>
+                </div>
+                
+                <div class="error-box">
+                    <h2>完整堆栈跟踪</h2>
+                    <pre>{error_tb}</pre>
+                </div>
+                
+                <div class="error-box">
+                    <h2>系统信息</h2>
+                    <p><strong>Python 版本:</strong> {sys.version}</p>
+                    <p><strong>工作目录:</strong> {os.getcwd()}</p>
+                    <p><strong>项目根目录:</strong> {project_root}</p>
+                    <p><strong>Python 路径:</strong></p>
+                    <pre>{chr(10).join(sys.path[:5])}</pre>
+                </div>
+                
+                <div class="error-box">
+                    <h2>环境变量状态</h2>
+                    <p><strong>OPENAI_API_KEY:</strong> {'✅ 已设置' if os.getenv('OPENAI_API_KEY') else '❌ 未设置'}</p>
+                    <p><strong>ALCHEMY_API_KEY:</strong> {'✅ 已设置' if os.getenv('ALCHEMY_API_KEY') else '❌ 未设置'}</p>
+                    <p><strong>CONTRACT_ADDRESS:</strong> {os.getenv('CONTRACT_ADDRESS', '❌ 未设置')}</p>
+                </div>
+            </body>
+            </html>
+            """, 500
+        return error_handler
+    
+    # 注册路由
+    handler = make_error_handler(_error_message, _error_type, _error_traceback)
+    app.route('/')(handler)
+    app.route('/<path:path>')(handler)
 

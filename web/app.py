@@ -18,8 +18,23 @@ from openai import OpenAI
 # 加载环境变量
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
-app = Flask(__name__)
-CORS(app)  # 启用跨域支持
+app = Flask(__name__, 
+            static_folder=os.path.join(os.path.dirname(__file__), 'static'),
+            template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
+
+# 启用 CORS - 用 try-catch 防止导入失败
+try:
+    CORS(app)
+    print("✅ CORS 已启用")
+except Exception as e:
+    print(f"⚠️  CORS 导入失败: {e}，继续运行...")
+    # 手动添加 CORS 头
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        return response
 
 # ============== 配置 ==============
 

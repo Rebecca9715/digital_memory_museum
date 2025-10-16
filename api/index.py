@@ -19,9 +19,8 @@ try:
     from web.app import app
     print("✅ Flask 应用导入成功")
     
-    # 确保 app 作为模块的默认导出
-    # Vercel 会寻找名为 'app' 的变量
-    handler = app
+    # Vercel 会寻找名为 'app' 的变量作为默认导出
+    # 这是标准的 Vercel Python 函数格式
     
 except Exception as e:
     print(f"❌ Flask 应用导入失败: {e}")
@@ -30,9 +29,9 @@ except Exception as e:
     
     # 创建一个简单的错误应用
     from flask import Flask
-    handler = Flask(__name__)
+    app = Flask(__name__)
     
-    @handler.route('/')
+    @app.route('/')
     def error_handler():
         return f"❌ 应用启动失败: {str(e)}", 500
 

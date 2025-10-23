@@ -111,7 +111,7 @@ def status():
                     status_data["agent_address"] = account.address
                     status_data["balance"] = float(web3.from_wei(balance, 'ether'))
                 except Exception as e:
-                    status_data["wallet_error"] = "私钥配置无效"
+                    status_data["wallet_error"] = "Invalid private key configuration"
         
         return jsonify(status_data)
     except Exception as e:
@@ -164,10 +164,10 @@ def evaluate():
         story_text = data.get('story_text', '').strip()
         
         if not story_text:
-            return jsonify({"error": "故事内容不能为空"}), 400
+            return jsonify({"error": "Story content cannot be empty"}), 400
         
         if len(story_text) < 50:
-            return jsonify({"error": "故事内容太短，至少需要 50 个字符"}), 400
+            return jsonify({"error": "Story is too short, minimum 50 characters required"}), 400
         
         # AI 评估 - 使用硅基流动 API
         client = OpenAI(
@@ -175,32 +175,31 @@ def evaluate():
             base_url=OPENAI_API_BASE
         )
         
-        prompt = f"""你是一位专业的文学评论家和文化档案管理员。请评估以下人文故事的价值，
-并以 JSON 格式返回评估结果。
+        prompt = f"""You are a professional literary critic and cultural archivist. Please evaluate the value of the following humanistic story and return the assessment in JSON format.
 
-评分标准（0-100）：
-- 情感深度和真实性 (30分)
-- 文化和历史价值 (25分)
-- 叙事质量和结构 (20分)
-- 原创性和独特性 (15分)
-- 社会意义和影响力 (10分)
+Scoring Criteria (0-100):
+- Emotional depth and authenticity (30 points)
+- Cultural and historical value (25 points)
+- Narrative quality and structure (20 points)
+- Originality and uniqueness (15 points)
+- Social significance and impact (10 points)
 
-故事内容：
+Story Content:
 {story_text}
 
-请以严格的 JSON 格式返回（不要包含任何markdown格式）：
+Please return in strict JSON format (without any markdown formatting):
 {{
-    "score": [0-100的整数],
-    "metadata_title": "[简短标题，最多50字符]",
-    "metadata_description": "[详细描述，总结故事的核心价值和特点，100-200字符]",
-    "feedback": "[详细的评估反馈，说明评分理由]",
-    "image_prompt": "[英文图片生成提示词，描述故事的核心场景、氛围和视觉元素，适合用于AI绘画，50-100字符]"
+    "score": [integer from 0-100],
+    "metadata_title": "[Brief title, max 50 characters]",
+    "metadata_description": "[Detailed description summarizing the core value and characteristics of the story, 100-200 characters]",
+    "feedback": "[Detailed evaluation feedback explaining the scoring rationale]",
+    "image_prompt": "[English image generation prompt describing the core scene, atmosphere and visual elements of the story, suitable for AI art generation, 50-100 characters]"
 }}"""
         
         response = client.chat.completions.create(
             model=AI_MODEL,
             messages=[
-                {"role": "system", "content": "你是一位专业的文学评论家。请始终返回有效的JSON格式。"},
+                {"role": "system", "content": "You are a professional literary critic. Always return valid JSON format."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
@@ -233,9 +232,9 @@ def evaluate():
         return jsonify(evaluation)
         
     except json.JSONDecodeError as e:
-        return jsonify({"error": f"AI 响应解析失败: {str(e)}"}), 500
+        return jsonify({"error": f"Failed to parse AI response: {str(e)}"}), 500
     except Exception as e:
-        return jsonify({"error": f"评估失败: {str(e)}"}), 500
+        return jsonify({"error": f"Evaluation failed: {str(e)}"}), 500
 
 
 @app.route('/api/mint', methods=['POST'])
@@ -246,7 +245,7 @@ def mint():
         metadata = data.get('metadata', {})
         
         if not metadata.get('metadata_title') or not metadata.get('metadata_description'):
-            return jsonify({"error": "元数据不完整"}), 400
+            return jsonify({"error": "Incomplete metadata"}), 400
         
         # 获取账户
         account = web3.eth.account.from_key(AGENT_PRIVATE_KEY)
@@ -326,7 +325,7 @@ def mint():
         return jsonify(result)
         
     except Exception as e:
-        return jsonify({"error": f"铸造失败: {str(e)}"}), 500
+        return jsonify({"error": f"Minting failed: {str(e)}"}), 500
 
 
 @app.route('/api/contract-config')

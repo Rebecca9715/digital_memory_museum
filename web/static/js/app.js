@@ -6,7 +6,7 @@ let exampleStories = [];
 
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🏛️ Digital Memory Museum 已加载');
+    console.log('🏛️ Digital Memory Museum Loaded');
     checkStatus();
     loadExamples();
     setupEventListeners();
@@ -83,8 +83,8 @@ function updateStatusUI(data) {
     
     if (data.error || !data.web3_connected) {
         indicator.classList.add('error');
-        text.textContent = '❌ 连接失败';
-        showNotification('无法连接到 Base Sepolia', 'error');
+        text.textContent = '❌ Connection Failed';
+        showNotification('Unable to connect to Base Sepolia', 'error');
     } else {
         indicator.classList.remove('error');
         text.innerHTML = `✅ Base Sepolia <span style="opacity: 0.8;">(Chain ${data.chain_id})</span>`;
@@ -92,10 +92,10 @@ function updateStatusUI(data) {
         if (data.balance !== undefined) {
             const balanceValue = parseFloat(data.balance);
             const balanceColor = balanceValue < 0.001 ? '#f59e0b' : '#22c55e';
-            balance.innerHTML = `💰 余额: <span style="color: ${balanceColor}; font-weight: 600;">${balanceValue.toFixed(4)} ETH</span>`;
+            balance.innerHTML = `💰 Balance: <span style="color: ${balanceColor}; font-weight: 600;">${balanceValue.toFixed(4)} ETH</span>`;
             
             if (balanceValue < 0.001) {
-                showNotification('余额不足，建议充值测试 ETH', 'warning');
+                showNotification('Low balance, please top up test ETH', 'warning');
             }
         }
     }
@@ -139,7 +139,7 @@ function loadExample(index) {
         });
         document.querySelector(`[data-index="${index}"]`).style.borderColor = 'var(--primary-color)';
         
-        showNotification(`已加载示例: ${story.title}`, 'success');
+        showNotification(`Example loaded: ${story.title}`, 'success');
     }
 }
 
@@ -159,7 +159,7 @@ function clearInput() {
         card.style.borderColor = 'transparent';
     });
     
-    showNotification('已清空内容', 'success');
+    showNotification('Content cleared', 'success');
 }
 
 // 评估故事
@@ -168,12 +168,12 @@ async function evaluateStory() {
     
     // 验证输入
     if (!storyText) {
-        showNotification('请先输入故事内容！', 'error');
+        showNotification('Please enter story content first!', 'error');
         return;
     }
 
     if (storyText.length < 50) {
-        showNotification('故事内容太短，至少需要 50 个字符！', 'warning');
+        showNotification('Story is too short, minimum 50 characters required!', 'warning');
         return;
     }
 
@@ -203,22 +203,22 @@ async function evaluateStory() {
         const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
         if (!response.ok) {
-            throw new Error(data.error || '评估失败');
+            throw new Error(data.error || 'Evaluation failed');
         }
 
         currentEvaluation = data;
         displayResults(data);
         
-        showNotification(`✅ 评估完成！用时 ${duration} 秒`, 'success');
+        showNotification(`✅ Evaluation completed! Time: ${duration}s`, 'success');
 
     } catch (error) {
         console.error('Evaluation error:', error);
         
-        let errorMessage = '评估失败';
+        let errorMessage = 'Evaluation failed';
         if (error.name === 'AbortError') {
-            errorMessage = '请求超时，请稍后重试';
+            errorMessage = 'Request timeout, please try again later';
         } else if (error.message === 'Failed to fetch') {
-            errorMessage = '网络连接失败，请检查服务器是否运行';
+            errorMessage = 'Network connection failed, please check if server is running';
         } else {
             errorMessage = error.message;
         }
@@ -247,8 +247,8 @@ function displayResults(data) {
     
     // 状态文本
     const statusText = data.should_mint ? 
-        '✅ 达到归档标准！' : 
-        '⚠️ 未达到归档标准';
+        '✅ Meets Archival Standard!' : 
+        '⚠️ Does Not Meet Archival Standard';
     const scoreStatus = document.getElementById('scoreStatus');
     if (scoreStatus) {
         scoreStatus.textContent = statusText;
@@ -258,7 +258,7 @@ function displayResults(data) {
     // 显示详情
     updateElement('resultTitle', data.metadata_title);
     updateElement('resultDescription', data.metadata_description);
-    updateElement('resultFeedback', data.feedback || '暂无详细反馈');
+    updateElement('resultFeedback', data.feedback || 'No detailed feedback available');
     
     // 显示图片（如果有）
     displayGeneratedImage(data.image_url, data.image_prompt);
@@ -278,9 +278,9 @@ function displayGeneratedImage(imageUrl, imagePrompt) {
     if (imageUrl) {
         imageContainer.innerHTML = `
             <div class="generated-image-wrapper">
-                <h4>🎨 AI 生成的 NFT 图片</h4>
+                <h4>🎨 AI Generated NFT Image</h4>
                 <img src="${escapeHtml(imageUrl)}" alt="Generated NFT Image" class="generated-image">
-                ${imagePrompt ? `<p class="image-prompt"><strong>图片提示词:</strong> ${escapeHtml(imagePrompt)}</p>` : ''}
+                ${imagePrompt ? `<p class="image-prompt"><strong>Image Prompt:</strong> ${escapeHtml(imagePrompt)}</p>` : ''}
             </div>
         `;
         imageContainer.style.display = 'block';
@@ -304,9 +304,9 @@ function updateMintSection(data) {
         mintSection.classList.remove('warning');
         if (mintMessage) {
             mintMessage.innerHTML = `
-                🎉 <strong>恭喜！</strong>这个故事达到了归档标准（评分: ${data.score}/100）！
+                🎉 <strong>Congratulations!</strong> This story meets the archival standard (Score: ${data.score}/100)!
                 <br><br>
-                您可以将其铸造为 NFT，永久保存在区块链上。
+                You can mint it as an NFT and permanently preserve it on the blockchain.
             `;
         }
         if (mintBtn) {
@@ -317,9 +317,9 @@ function updateMintSection(data) {
         mintSection.classList.add('warning');
         if (mintMessage) {
             mintMessage.innerHTML = `
-                📝 这个故事暂未达到归档标准（评分: ${data.score}/100 < 阈值 85）。
+                📝 This story does not yet meet the archival standard (Score: ${data.score}/100 < Threshold 85).
                 <br><br>
-                <strong>建议：</strong>${data.feedback ? data.feedback.substring(0, 150) + '...' : '改进后重新提交'}
+                <strong>Suggestion:</strong> ${data.feedback ? data.feedback.substring(0, 150) + '...' : 'Improve and resubmit'}
             `;
         }
         if (mintBtn) {
@@ -335,7 +335,7 @@ function updateMintSection(data) {
 // 铸造 NFT
 async function mintNFT() {
     if (!currentEvaluation || !currentEvaluation.should_mint) {
-        showNotification('当前故事未达到铸造标准！', 'error');
+        showNotification('Current story does not meet minting standard!', 'error');
         return;
     }
 
@@ -343,13 +343,13 @@ async function mintNFT() {
     const originalText = mintBtn.textContent;
     
     mintBtn.disabled = true;
-    mintBtn.textContent = '⏳ 铸造中...';
+    mintBtn.textContent = '⏳ Minting...';
 
     const resultDiv = document.getElementById('mintResult');
     resultDiv.innerHTML = `
         <div class="loading active">
             <div class="spinner"></div>
-            <p>正在发送交易到区块链...<br><small>这可能需要 10-30 秒</small></p>
+            <p>Sending transaction to blockchain...<br><small>This may take 10-30 seconds</small></p>
         </div>
     `;
 
@@ -360,11 +360,11 @@ async function mintNFT() {
         // 检查是否连接了钱包
         if (window.web3Wallet && window.web3Wallet.isConnected()) {
             // 使用钱包铸造
-            console.log('🔐 使用连接的钱包铸造 NFT...');
+            console.log('🔐 Minting NFT using connected wallet...');
             data = await window.web3Wallet.mintNFT(currentEvaluation);
         } else {
             // 使用后端铸造
-            console.log('🖥️ 使用后端铸造 NFT...');
+            console.log('🖥️ Minting NFT using backend...');
             const response = await fetch('/api/mint', {
                 method: 'POST',
                 headers: {
@@ -376,7 +376,7 @@ async function mintNFT() {
             data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || '铸造失败');
+                throw new Error(data.error || 'Minting failed');
             }
         }
 
@@ -387,42 +387,42 @@ async function mintNFT() {
             
             resultDiv.innerHTML = `
                 <div class="alert alert-success">
-                    <h4>🎉 铸造成功！</h4>
-                    ${walletUsed ? `<p><strong>铸造方式:</strong> 用户钱包 (${window.web3Wallet.getAccount().substring(0,10)}...)</p>` : ''}
-                    <p><strong>交易哈希:</strong><br><code style="font-size: 0.9em;">${data.tx_hash}</code></p>
-                    <p><strong>Gas 使用:</strong> ${data.gas_used.toLocaleString()} units</p>
-                    <p><strong>区块高度:</strong> #${data.block_number}</p>
-                    <p><strong>用时:</strong> ${duration} 秒</p>
+                    <h4>🎉 Minting Successful!</h4>
+                    ${walletUsed ? `<p><strong>Minting Method:</strong> User Wallet (${window.web3Wallet.getAccount().substring(0,10)}...)</p>` : ''}
+                    <p><strong>Transaction Hash:</strong><br><code style="font-size: 0.9em;">${data.tx_hash}</code></p>
+                    <p><strong>Gas Used:</strong> ${data.gas_used.toLocaleString()} units</p>
+                    <p><strong>Block Number:</strong> #${data.block_number}</p>
+                    <p><strong>Duration:</strong> ${duration} seconds</p>
                     <a href="${data.explorer_url}" target="_blank" class="tx-link">
-                        🔗 在区块浏览器中查看
+                        🔗 View on Block Explorer
                     </a>
                 </div>
             `;
             
             mintBtn.style.display = 'none';
-            showNotification('🎉 NFT 铸造成功！', 'success');
+            showNotification('🎉 NFT minted successfully!', 'success');
             
             // 清除草稿
             localStorage.removeItem('daa_draft');
             
         } else {
-            throw new Error('交易执行失败');
+            throw new Error('Transaction execution failed');
         }
 
     } catch (error) {
         console.error('Mint error:', error);
         resultDiv.innerHTML = `
             <div class="alert alert-error">
-                <h4>❌ 铸造失败</h4>
+                <h4>❌ Minting Failed</h4>
                 <p>${escapeHtml(error.message)}</p>
-                <p><small>提示：您可以连接 MetaMask 钱包自己铸造 NFT</small></p>
+                <p><small>Tip: You can connect MetaMask wallet to mint NFT yourself</small></p>
             </div>
         `;
         
         mintBtn.disabled = false;
         mintBtn.textContent = originalText;
         
-        showNotification('铸造失败: ' + error.message, 'error');
+        showNotification('Minting failed: ' + error.message, 'error');
     }
 }
 
@@ -563,7 +563,7 @@ window.DAA = {
     checkStatus
 };
 
-console.log('✅ Digital Memory Museum 初始化完成');
+console.log('✅ Digital Memory Museum initialized');
 
 
 

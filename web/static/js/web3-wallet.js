@@ -1,6 +1,6 @@
-// Web3 钱包连接和NFT铸造功能
+// Web3 Wallet Connection and NFT Minting Functions
 
-// 全局 Web3 状态
+// Global Web3 State
 window.web3State = {
     isConnected: false,
     account: null,
@@ -9,40 +9,40 @@ window.web3State = {
     web3: null
 };
 
-// 合约配置（将从服务器获取）
+// Contract configuration (will be fetched from server)
 let CONTRACT_ADDRESS = null;
 let CONTRACT_ABI = null;
-const SEPOLIA_CHAIN_ID = '0xaa36a7'; // 11155111 的十六进制
+const SEPOLIA_CHAIN_ID = '0xaa36a7'; // 11155111 in hexadecimal
 
-// 初始化 Web3
+// Initialize Web3
 async function initWeb3() {
-    console.log('🔧 初始化 Web3...');
+    console.log('🔧 Initializing Web3...');
     
-    // 检查是否安装 MetaMask
+    // Check if MetaMask is installed
     if (typeof window.ethereum === 'undefined') {
-        showNotification('请安装 MetaMask 钱包！', 'error');
+        showNotification('Please install MetaMask wallet!', 'error');
         return false;
     }
 
     try {
-        // 获取合约配置
+        // Load contract configuration
         await loadContractConfig();
         
-        // 监听账户变化
+        // Listen for account changes
         window.ethereum.on('accountsChanged', handleAccountsChanged);
         
-        // 监听链变化
+        // Listen for chain changes
         window.ethereum.on('chainChanged', handleChainChanged);
         
-        console.log('✅ Web3 初始化完成');
+        console.log('✅ Web3 initialized');
         return true;
     } catch (error) {
-        console.error('Web3 初始化失败:', error);
+        console.error('Web3 initialization failed:', error);
         return false;
     }
 }
 
-// 加载合约配置
+// Load contract configuration
 async function loadContractConfig() {
     try {
         const response = await fetch('/api/contract-config');
@@ -51,10 +51,10 @@ async function loadContractConfig() {
         CONTRACT_ADDRESS = config.address;
         CONTRACT_ABI = config.abi;
         
-        console.log('📝 合约地址:', CONTRACT_ADDRESS);
+        console.log('📝 Contract address:', CONTRACT_ADDRESS);
     } catch (error) {
-        console.error('加载合约配置失败:', error);
-        // 使用默认 ABI
+        console.error('Failed to load contract config:', error);
+        // Use default ABI
         CONTRACT_ABI = [
             {
                 "inputs": [{"internalType": "string", "name": "tokenURI", "type": "string"}],
@@ -67,59 +67,59 @@ async function loadContractConfig() {
     }
 }
 
-// 连接钱包
+// Connect wallet
 async function connectWallet() {
-    console.log('🔐 正在连接钱包...');
+    console.log('🔐 Connecting wallet...');
     
     if (typeof window.ethereum === 'undefined') {
-        showNotification('❌ 未检测到 MetaMask，请先安装！', 'error');
+        showNotification('❌ MetaMask not detected, please install first!', 'error');
         window.open('https://metamask.io/download/', '_blank');
         return false;
     }
 
     try {
-        // 请求账户访问
+        // Request account access
         const accounts = await window.ethereum.request({ 
             method: 'eth_requestAccounts' 
         });
         
         if (accounts.length === 0) {
-            showNotification('未找到账户', 'warning');
+            showNotification('No account found', 'warning');
             return false;
         }
 
-        // 获取链 ID
+        // Get chain ID
         const chainId = await window.ethereum.request({ 
             method: 'eth_chainId' 
         });
 
-        // 更新状态
+        // Update state
         window.web3State.account = accounts[0];
         window.web3State.chainId = chainId;
         window.web3State.isConnected = true;
 
-        // 检查是否在 Sepolia 网络
+        // Check if on Sepolia network
         if (chainId !== SEPOLIA_CHAIN_ID) {
             await switchToSepolia();
         } else {
             initContract();
         }
 
-        // 更新 UI
+        // Update UI
         updateWalletUI();
         
-        showNotification(`✅ 钱包已连接: ${formatAddress(accounts[0])}`, 'success');
-        console.log('✅ 钱包连接成功:', accounts[0]);
+        showNotification(`✅ Wallet connected: ${formatAddress(accounts[0])}`, 'success');
+        console.log('✅ Wallet connected successfully:', accounts[0]);
         
         return true;
     } catch (error) {
-        console.error('连接钱包失败:', error);
-        showNotification('连接钱包失败: ' + error.message, 'error');
+        console.error('Failed to connect wallet:', error);
+        showNotification('Failed to connect wallet: ' + error.message, 'error');
         return false;
     }
 }
 
-// 切换到 Sepolia 网络
+// Switch to Sepolia network
 async function switchToSepolia() {
     try {
         await window.ethereum.request({
@@ -127,10 +127,10 @@ async function switchToSepolia() {
             params: [{ chainId: SEPOLIA_CHAIN_ID }],
         });
         
-        showNotification('✅ 已切换到 Sepolia 测试网', 'success');
+        showNotification('✅ Switched to Sepolia testnet', 'success');
         initContract();
     } catch (error) {
-        // 如果网络不存在，添加它
+        // If network doesn't exist, add it
         if (error.code === 4902) {
             try {
                 await window.ethereum.request({
@@ -149,18 +149,18 @@ async function switchToSepolia() {
                 });
                 initContract();
             } catch (addError) {
-                showNotification('添加 Sepolia 网络失败', 'error');
+                showNotification('Failed to add Sepolia network', 'error');
             }
         } else {
-            showNotification('切换网络失败: ' + error.message, 'error');
+            showNotification('Failed to switch network: ' + error.message, 'error');
         }
     }
 }
 
-// 初始化合约
+// Initialize contract
 function initContract() {
     if (!window.ethereum || !CONTRACT_ADDRESS) {
-        console.warn('无法初始化合约：缺少 ethereum 或合约地址');
+        console.warn('Cannot initialize contract: missing ethereum or contract address');
         return;
     }
 
@@ -170,27 +170,27 @@ function initContract() {
             CONTRACT_ABI,
             CONTRACT_ADDRESS
         );
-        console.log('✅ 合约已初始化');
+        console.log('✅ Contract initialized');
     } catch (error) {
-        console.error('初始化合约失败:', error);
+        console.error('Failed to initialize contract:', error);
     }
 }
 
-// 使用钱包铸造 NFT
+// Mint NFT with wallet
 async function mintNFTWithWallet(metadata) {
     if (!window.web3State.isConnected) {
-        showNotification('请先连接钱包', 'warning');
+        showNotification('Please connect wallet first', 'warning');
         const connected = await connectWallet();
         if (!connected) return null;
     }
 
     if (!window.web3State.contract) {
-        showNotification('合约未初始化', 'error');
+        showNotification('Contract not initialized', 'error');
         return null;
     }
 
     try {
-        // 构建符合 NFT 标准的元数据
+        // Build NFT standard metadata
         const nftMetadata = {
             name: metadata.metadata_title || 'Untitled Memory',
             description: metadata.metadata_description || '',
@@ -207,7 +207,7 @@ async function mintNFTWithWallet(metadata) {
             ]
         };
         
-        // 如果有图片提示词，也加入属性
+        // If there's an image prompt, add it to attributes
         if (metadata.image_prompt) {
             nftMetadata.attributes.push({
                 trait_type: 'Image Prompt',
@@ -215,24 +215,24 @@ async function mintNFTWithWallet(metadata) {
             });
         }
         
-        // 将元数据转换为 base64 编码的 data URI
+        // Convert metadata to base64 encoded data URI
         const metadataJson = JSON.stringify(nftMetadata);
         const metadataBase64 = btoa(unescape(encodeURIComponent(metadataJson)));
         const tokenURI = `data:application/json;base64,${metadataBase64}`;
 
-        console.log('🎨 开始铸造 NFT...');
-        console.log('📝 NFT 元数据:', nftMetadata);
-        console.log('🔗 Token URI 长度:', tokenURI.length, '字符');
+        console.log('🎨 Starting to mint NFT...');
+        console.log('📝 NFT metadata:', nftMetadata);
+        console.log('🔗 Token URI length:', tokenURI.length, 'characters');
 
-        // 调用合约的 mint 函数
+        // Call contract's mint function
         const tx = await window.web3State.contract.methods
             .mint(tokenURI)
             .send({ 
                 from: window.web3State.account,
-                value: '0' // 免费铸造
+                value: '0' // Free minting
             });
 
-        console.log('✅ 铸造成功！交易哈希:', tx.transactionHash);
+        console.log('✅ Minting successful! Transaction hash:', tx.transactionHash);
 
         return {
             success: true,
@@ -244,11 +244,11 @@ async function mintNFTWithWallet(metadata) {
         };
 
     } catch (error) {
-        console.error('铸造失败:', error);
+        console.error('Minting failed:', error);
         
-        let errorMessage = '铸造失败';
+        let errorMessage = 'Minting failed';
         if (error.code === 4001) {
-            errorMessage = '用户取消了交易';
+            errorMessage = 'User cancelled transaction';
         } else if (error.message) {
             errorMessage = error.message;
         }
@@ -257,7 +257,7 @@ async function mintNFTWithWallet(metadata) {
     }
 }
 
-// 断开钱包
+// Disconnect wallet
 function disconnectWallet() {
     window.web3State.isConnected = false;
     window.web3State.account = null;
@@ -265,35 +265,35 @@ function disconnectWallet() {
     window.web3State.contract = null;
     
     updateWalletUI();
-    showNotification('钱包已断开连接', 'info');
+    showNotification('Wallet disconnected', 'info');
 }
 
-// 处理账户变化
+// Handle account changes
 function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
         disconnectWallet();
     } else if (accounts[0] !== window.web3State.account) {
         window.web3State.account = accounts[0];
         updateWalletUI();
-        showNotification(`账户已切换: ${formatAddress(accounts[0])}`, 'info');
+        showNotification(`Account switched: ${formatAddress(accounts[0])}`, 'info');
     }
 }
 
-// 处理链变化
+// Handle chain changes
 function handleChainChanged(chainId) {
     window.web3State.chainId = chainId;
     
     if (chainId !== SEPOLIA_CHAIN_ID) {
-        showNotification('⚠️ 请切换到 Sepolia 测试网', 'warning');
+        showNotification('⚠️ Please switch to Sepolia testnet', 'warning');
     } else {
         initContract();
-        showNotification('✅ 已连接到 Sepolia 测试网', 'success');
+        showNotification('✅ Connected to Sepolia testnet', 'success');
     }
     
     updateWalletUI();
 }
 
-// 更新钱包 UI
+// Update wallet UI
 function updateWalletUI() {
     const walletBtn = document.getElementById('walletConnectBtn');
     const walletInfo = document.getElementById('walletInfo');
@@ -307,11 +307,11 @@ function updateWalletUI() {
         if (walletInfo) {
             walletInfo.style.display = 'block';
             walletInfo.innerHTML = `
-                <span>🔗 ${window.web3State.chainId === SEPOLIA_CHAIN_ID ? 'Sepolia' : '错误网络'}</span>
+                <span>🔗 ${window.web3State.chainId === SEPOLIA_CHAIN_ID ? 'Sepolia' : 'Wrong Network'}</span>
             `;
         }
     } else {
-        walletBtn.textContent = '🔐 连接钱包';
+        walletBtn.textContent = '🔐 Connect Wallet';
         walletBtn.classList.remove('connected');
         
         if (walletInfo) {
@@ -320,19 +320,19 @@ function updateWalletUI() {
     }
 }
 
-// 格式化地址
+// Format address
 function formatAddress(address) {
     if (!address) return '';
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 }
 
-// 页面加载时初始化
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // 延迟初始化，等待 Web3 库加载
+    // Delay initialization to wait for Web3 library to load
     setTimeout(initWeb3, 100);
 });
 
-// 导出函数供全局使用
+// Export functions for global use
 window.web3Wallet = {
     connect: connectWallet,
     disconnect: disconnectWallet,
@@ -341,5 +341,5 @@ window.web3Wallet = {
     getAccount: () => window.web3State.account
 };
 
-console.log('✅ Web3 钱包模块已加载');
+console.log('✅ Web3 wallet module loaded');
 

@@ -336,21 +336,21 @@
         <!-- Header -->
         <div class="header">
             <h1>🏛️ Digital Memory Museum</h1>
-            <p>AI 驱动的人文故事价值评估与区块链归档系统</p>
+            <p>AI-Powered Humanistic Story Evaluation and Blockchain Archival System</p>
         </div>
 
         <!-- Status Bar -->
         <div class="status-bar">
             <div class="status-item">
                 <div class="status-indicator" id="connectionStatus"></div>
-                <span id="connectionText">正在连接...</span>
+                <span id="connectionText">Connecting...</span>
             </div>
             <div class="status-item">
-                <span>📊 评分阈值: {{ threshold }}</span>
+                <span>📊 Score Threshold: {{ threshold }}</span>
             </div>
             <div class="status-item">
                 <button id="walletConnectBtn" class="wallet-btn" onclick="web3Wallet.connect()">
-                    🔐 连接钱包
+                    🔐 Connect Wallet
                 </button>
                 <span id="walletInfo" style="display: none;"></span>
             </div>
@@ -360,23 +360,23 @@
         <div class="main-content">
             <!-- Left Panel: Input -->
             <div class="card">
-                <h2>📝 输入故事</h2>
+                <h2>📝 Enter Story</h2>
                 <textarea 
                     id="storyInput" 
-                    placeholder="在这里输入你的人文故事...&#10;&#10;故事应该包含情感、文化价值或深刻的人生体验。&#10;至少 50 个字符。"
+                    placeholder="Enter your humanistic story here...&#10;&#10;The story should contain emotion, cultural value, or profound life experience.&#10;Minimum 50 characters."
                 ></textarea>
                 
                 <div class="button-group">
                     <button class="btn-primary" id="evaluateBtn">
-                        🧠 AI 评估
+                        🧠 AI Evaluation
                     </button>
                     <button class="btn-secondary" id="clearBtn">
-                        🗑️ 清空
+                        🗑️ Clear
                     </button>
                 </div>
 
                 <div class="result-section">
-                    <h3 style="margin: 20px 0 10px 0; color: #667eea;">📚 示例故事</h3>
+                    <h3 style="margin: 20px 0 10px 0; color: #667eea;">📚 Example Stories</h3>
                     <div class="example-stories" id="exampleStories">
                         <!-- 动态加载 -->
                     </div>
@@ -385,30 +385,30 @@
 
             <!-- Right Panel: Results -->
             <div class="card">
-                <h2>📊 评估结果</h2>
+                <h2>📊 Evaluation Results</h2>
                 
                 <div id="loadingSection" class="loading">
                     <div class="spinner"></div>
-                    <p>AI 正在评估中...</p>
+                    <p>AI is evaluating...</p>
                 </div>
 
                 <div id="resultsSection" style="display: none;">
                     <!-- Score Display -->
                     <div class="result-card result-score">
-                        <h3 style="text-align: center; margin-bottom: 10px;">综合评分</h3>
+                        <h3 style="text-align: center; margin-bottom: 10px;">Overall Score</h3>
                         <div class="score-display" id="scoreDisplay">--</div>
                         <p style="text-align: center; opacity: 0.9;" id="scoreStatus">--</p>
                     </div>
 
                     <!-- Details -->
                     <div class="result-card result-details">
-                        <h3>📖 <span id="resultTitle">标题</span></h3>
-                        <p id="resultDescription">描述</p>
+                        <h3>📖 <span id="resultTitle">Title</span></h3>
+                        <p id="resultDescription">Description</p>
                     </div>
 
                     <div class="result-card result-details">
-                        <h3>💭 详细反馈</h3>
-                        <p id="resultFeedback">反馈</p>
+                        <h3>💭 Detailed Feedback</h3>
+                        <p id="resultFeedback">Feedback</p>
                     </div>
                     
                     <!-- Generated Image -->
@@ -418,10 +418,10 @@
 
                     <!-- Mint Section -->
                     <div id="mintSection" class="result-card mint-section" style="display: none;">
-                        <h3>⛓️ 链上铸造</h3>
-                        <p id="mintMessage">这个故事达到了归档标准！</p>
+                        <h3>⛓️ Mint on Chain</h3>
+                        <p id="mintMessage">This story meets the archival standard!</p>
                         <button class="btn-success" id="mintBtn" style="margin-top: 10px; width: 100%;">
-                            🎨 铸造 NFT
+                            🎨 Mint NFT
                         </button>
                         <div id="mintResult" style="margin-top: 15px;"></div>
                     </div>
@@ -429,7 +429,7 @@
 
                 <div id="emptyState" style="text-align: center; padding: 60px 20px; color: #9ca3af;">
                     <div style="font-size: 4em; margin-bottom: 20px;">📭</div>
-                    <p>输入故事并点击"AI 评估"开始</p>
+                    <p>Enter a story and click "AI Evaluation" to start</p>
                 </div>
             </div>
         </div>
@@ -466,20 +466,20 @@
                 
                 if (data.web3_connected) {
                     document.getElementById('connectionStatus').style.background = '#4ade80';
-                    document.getElementById('connectionText').textContent = '✅ Base Sepolia 已连接';
+                    document.getElementById('connectionText').textContent = '✅ Base Sepolia Connected';
                     
                     if (data.balance !== undefined) {
                         document.getElementById('balanceText').textContent = 
-                            `💰 余额: ${data.balance.toFixed(4)} ETH`;
+                            `💰 Balance: ${data.balance.toFixed(4)} ETH`;
                     }
                 } else {
                     document.getElementById('connectionStatus').style.background = '#ef4444';
-                    document.getElementById('connectionText').textContent = '❌ 连接失败';
+                    document.getElementById('connectionText').textContent = '❌ Connection Failed';
                 }
             } catch (error) {
                 console.error('Status check failed:', error);
                 document.getElementById('connectionStatus').style.background = '#f59e0b';
-                document.getElementById('connectionText').textContent = '⚠️ 状态未知';
+                document.getElementById('connectionText').textContent = '⚠️ Status Unknown';
             }
         }
 
@@ -522,12 +522,12 @@
             const storyText = document.getElementById('storyInput').value.trim();
             
             if (!storyText) {
-                alert('请先输入故事内容！');
+                alert('Please enter story content first!');
                 return;
             }
 
             if (storyText.length < 50) {
-                alert('故事内容太短，至少需要 50 个字符！');
+                alert('Story is too short, minimum 50 characters required!');
                 return;
             }
 
@@ -549,14 +549,14 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || '评估失败');
+                    throw new Error(data.error || 'Evaluation failed');
                 }
 
                 currentEvaluation = data;
                 displayResults(data);
 
             } catch (error) {
-                alert('评估失败: ' + error.message);
+                alert('Evaluation failed: ' + error.message);
                 document.getElementById('emptyState').style.display = 'block';
             } finally {
                 document.getElementById('loadingSection').classList.remove('active');
@@ -572,14 +572,14 @@
             document.getElementById('scoreDisplay').textContent = data.score;
             
             const statusText = data.should_mint ? 
-                '✅ 达到归档标准！' : 
-                '⚠️ 未达到归档标准';
+                '✅ Meets Archival Standard!' : 
+                '⚠️ Does Not Meet Archival Standard';
             document.getElementById('scoreStatus').textContent = statusText;
 
             // 显示详情
             document.getElementById('resultTitle').textContent = data.metadata_title;
             document.getElementById('resultDescription').textContent = data.metadata_description;
-            document.getElementById('resultFeedback').textContent = data.feedback || '暂无详细反馈';
+            document.getElementById('resultFeedback').textContent = data.feedback || 'No detailed feedback available';
 
             // 显示/隐藏铸造区域
             const mintSection = document.getElementById('mintSection');
@@ -587,12 +587,12 @@
                 mintSection.style.display = 'block';
                 mintSection.classList.remove('warning');
                 document.getElementById('mintMessage').textContent = 
-                    `🎉 这个故事达到了归档标准（评分: ${data.score}）！您可以将其铸造为 NFT 永久保存。`;
+                    `🎉 This story meets the archival standard (Score: ${data.score})! You can mint it as an NFT for permanent preservation.`;
             } else {
                 mintSection.style.display = 'block';
                 mintSection.classList.add('warning');
                 document.getElementById('mintMessage').textContent = 
-                    `📝 这个故事暂未达到归档标准（评分: ${data.score} < {{ threshold }}）。建议改进后重新提交。`;
+                    `📝 This story does not yet meet the archival standard (Score: ${data.score} < {{ threshold }}). We recommend improving it and resubmitting.`;
                 document.getElementById('mintBtn').style.display = 'none';
             }
 
@@ -602,16 +602,16 @@
         // 铸造 NFT
         async function mintNFT() {
             if (!currentEvaluation || !currentEvaluation.should_mint) {
-                alert('当前故事未达到铸造标准！');
+                alert('Current story does not meet minting standard!');
                 return;
             }
 
             const mintBtn = document.getElementById('mintBtn');
             mintBtn.disabled = true;
-            mintBtn.textContent = '⏳ 铸造中...';
+            mintBtn.textContent = '⏳ Minting...';
 
             const resultDiv = document.getElementById('mintResult');
-            resultDiv.innerHTML = '<div class="loading active"><div class="spinner"></div><p>正在发送交易到区块链...</p></div>';
+            resultDiv.innerHTML = '<div class="loading active"><div class="spinner"></div><p>Sending transaction to blockchain...</p></div>';
 
             try {
                 const response = await fetch('/api/mint', {
@@ -625,35 +625,35 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || '铸造失败');
+                    throw new Error(data.error || 'Minting failed');
                 }
 
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="alert alert-success">
-                            <h4 style="margin-bottom: 10px;">🎉 铸造成功！</h4>
-                            <p><strong>交易哈希:</strong> ${data.tx_hash.substring(0, 20)}...</p>
-                            <p><strong>Gas 使用:</strong> ${data.gas_used.toLocaleString()}</p>
-                            <p><strong>区块高度:</strong> ${data.block_number}</p>
+                            <h4 style="margin-bottom: 10px;">🎉 Minting Successful!</h4>
+                            <p><strong>Transaction Hash:</strong> ${data.tx_hash.substring(0, 20)}...</p>
+                            <p><strong>Gas Used:</strong> ${data.gas_used.toLocaleString()}</p>
+                            <p><strong>Block Number:</strong> ${data.block_number}</p>
                             <a href="${data.explorer_url}" target="_blank" class="tx-link">
-                                🔗 在区块浏览器中查看
+                                🔗 View on Block Explorer
                             </a>
                         </div>
                     `;
                     mintBtn.style.display = 'none';
                 } else {
-                    throw new Error('交易失败');
+                    throw new Error('Transaction failed');
                 }
 
             } catch (error) {
                 resultDiv.innerHTML = `
                     <div class="alert alert-error">
-                        <strong>❌ 铸造失败</strong>
+                        <strong>❌ Minting Failed</strong>
                         <p>${error.message}</p>
                     </div>
                 `;
                 mintBtn.disabled = false;
-                mintBtn.textContent = '🎨 铸造 NFT';
+                mintBtn.textContent = '🎨 Mint NFT';
             }
         }
     </script>

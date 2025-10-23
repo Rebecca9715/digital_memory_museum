@@ -366,30 +366,30 @@ def examples():
     """获取示例故事"""
     example_stories = [
         {
-            "title": "制陶师傅的最后一件作品",
-            "content": """在一个古老的村庄里，住着一位年迈的制陶师傅。他用一生的时间，将泥土塑造成器皿，也将记忆烧制进每一件作品。他的双手布满裂纹，如同他捏制的陶罐表面的纹理。村里的年轻人都去了城市，只有他还守着这门即将失传的手艺。
+            "title": "The Potter's Final Masterpiece",
+            "content": """In an ancient village lived an elderly potter. He had spent a lifetime shaping clay into vessels, firing memories into each creation. His hands were covered with cracks, like the textures on the pottery he crafted. All the young people had left for the cities, leaving only him to guard this dying craft.
 
-一个雨夜，他最后一次点燃了窑火。火光中，他看到了自己的一生——童年时第一次触摸陶土的惊喜，青年时学艺的艰辛，以及晚年独自守望的孤独。当第二天村民们发现他时，窑里的陶罐已经烧制完成，温润如玉。而老人静静地坐在那里，脸上带着满足的笑容，仿佛他自己也成为了他最后的作品。
+On a rainy night, he lit his kiln for the last time. In the firelight, he saw his entire life—the wonder of first touching clay as a child, the hardships of apprenticeship in his youth, and the solitude of his twilight years as a guardian. When villagers found him the next day, the pottery in the kiln had been perfectly fired, smooth as jade. The old man sat there quietly, a contented smile on his face, as if he himself had become his final masterpiece.
 
-这个故事传遍了整个地区，那件最后的陶罐被送进了博物馆。人们说，如果你仔细聆听，还能听到陶罐里传来窑火燃烧的声音，那是一位匠人对时光最温柔的诉说。"""
+The story spread throughout the region, and that last piece of pottery was sent to a museum. People say if you listen carefully, you can still hear the sound of the kiln fire burning within the vessel—a craftsman's most gentle conversation with time."""
         },
         {
-            "title": "图书馆的守夜人",
-            "content": """在城市的老城区，有一座百年历史的图书馆。每天闭馆后，守夜人老张会在书架间巡视。他说，这些书也需要有人陪伴。
+            "title": "The Library Night Watchman",
+            "content": """In the old quarter of the city stood a century-old library. Each night after closing, the watchman, Old Zhang, would patrol among the bookshelves. He said these books also needed company.
 
-有一次，他发现一本泛黄的日记本夹在两本厚重的历史书之间。日记的主人是一位在战争年代保护图书的年轻馆员，她冒着生命危险将珍贵的古籍转移到安全地带。日记最后一页写着："知识是人类最宝贵的财富，值得我们用生命去守护。"
+One day, he discovered a yellowed diary tucked between two thick history books. The diary belonged to a young librarian who had protected books during wartime, risking her life to move precious ancient texts to safety. The last page read: "Knowledge is humanity's most precious treasure, worth protecting with our lives."
 
-老张将这本日记放在了图书馆最显眼的位置。从那以后，每个来访者都能读到这个故事。人们开始明白，守护知识不仅仅是一份工作，更是一种传承。"""
+Old Zhang placed this diary in the library's most prominent position. From then on, every visitor could read this story. People began to understand that protecting knowledge is not just a job—it's a legacy to be passed down."""
         },
         {
-            "title": "奶奶的菜谱",
-            "content": """奶奶去世后，我在她的旧箱子里发现了一本手写的菜谱。每一页都记录着一道菜的做法，还有她亲手画的小图。但最让我感动的，是每道菜后面都有一段话。
+            "title": "Grandmother's Recipe Book",
+            "content": """After my grandmother passed away, I found a handwritten recipe book in her old trunk. Each page recorded a dish's preparation method, with small drawings she had sketched herself. But what moved me most were the notes written after each recipe.
 
-"红烧肉——你爷爷最爱吃，每次做这道菜他都会多吃一碗饭。"
-"糖醋排骨——你爸小时候不爱吃饭，我就做这个哄他。"
-"西红柿鸡蛋——你出生那天，我特意做了这道菜庆祝。"
+"Braised pork—your grandfather's favorite. He'd always have an extra bowl of rice when I made this."
+"Sweet and sour ribs—your father was a picky eater as a child, so I made this to coax him."
+"Tomato and eggs—I made this specially to celebrate the day you were born."
 
-原来每一道菜都承载着一个故事，一段回忆。我决定学会这些菜，不仅因为它们美味，更因为这是奶奶留给我的爱的密码。"""
+Each dish carried a story, a memory. I decided to learn all these recipes, not just because they were delicious, but because they were grandmother's code of love, left for me to decipher."""
         }
     ]
     
